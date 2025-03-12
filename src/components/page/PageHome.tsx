@@ -289,6 +289,75 @@ const seriesList: seriesInterface[] = [
     ],
     category: "games",
   },
+  {
+    name: "Hololive ",
+    characters: [
+      //  Hololive JP
+      "Tokino Sora",
+      "Robocosan",
+      "Yozora Mel",
+      "Akai Haato",
+      "Shirakami Fubuki",
+      "Minato Aqua",
+      "Murasaki Shion",
+      "Nakiri Ayame",
+      "Yuzuki Choco",
+      "Oozora Subaru",
+      "Sakura Miko",
+      "Natsuiro Matsuri",
+      "Azki",
+      "Houshou Marine",
+      "Usada Pekora",
+      "Uruha Rushia",
+      "Shiranui Flare",
+      "Shirogane Noel",
+      "Tsunomaki Watame",
+      "Himemori Luna",
+      "Yukihana Lamy",
+      "Momosuzu Nene",
+      "Shishiro Botan",
+      "Omaru Polka",
+      "Takane Lui",
+      "Hakui Koyori",
+      "Sakamata Chloe",
+      "Kazama Iroha",
+      "Hiodoshi Ao",
+      "Ichijou Ririka",
+      "Juufuutei Raden",
+      "Otonose Kanade",
+
+      // # Hololive EN
+      "Mori Calliope",
+      "Takanashi Kiara",
+      "Ninomae Ina'nis",
+      "Gawr Gura",
+      "Watson Amelia",
+      "IRyS",
+      "Ceres Fauna",
+      "Ouro Kronii",
+      "Nanashi Mumei",
+      "Hakos Baelz",
+      "Advent",
+      "Shiori Novella",
+      "Koseki Bijou",
+      "Nerissa Ravencroft",
+      "Fuwawa Abyssgard",
+      "Mococo Abyssgard",
+
+      // # Hololive ID
+      "Ayunda Risu",
+      "Moona Hoshinova",
+      "Airani Iofifteen",
+      "Kureiji Ollie",
+      "Anya Melfissa",
+      "Pavolia Reine",
+      "Vestia Zeta",
+      "Kaela Kovalskia",
+      "Kobo Kanaeru",
+    ],
+    hashtags: ["#hololive", "#hololivecosplay"],
+    category: "vtuber",
+  },
 ];
 
 export default function PageHome() {
@@ -431,11 +500,7 @@ export default function PageHome() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
-              <img
-                alt=""
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
-              />
+              <img alt="" src="tokisakilogo-black.svg" className="h-8 w-auto" />
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -469,7 +534,7 @@ export default function PageHome() {
                 <span className="sr-only">Your Company</span>
                 <img
                   alt=""
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                  src="tokisakilogo-black.svg"
                   className="h-8 w-auto"
                 />
               </a>
