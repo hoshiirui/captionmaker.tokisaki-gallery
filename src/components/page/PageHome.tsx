@@ -250,7 +250,7 @@ export default function PageHome() {
   };
 
   const getInFrame = (str: string): string => {
-    let coserArray: string[] = [];
+    const coserArray: string[] = [];
     let tempStr = str; // Create a copy of the input string to avoid mutation
 
     while (tempStr.includes("@")) {
