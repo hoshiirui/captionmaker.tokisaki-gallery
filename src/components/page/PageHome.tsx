@@ -27,6 +27,7 @@ import {
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import quotesData from "./../../data/quotes.json";
+import { ToastError, ToastSuccess } from "@/helper/Toast";
 
 const products = [
   {
@@ -68,9 +69,12 @@ const callsToAction = [
 interface postCaption {
   upperquotes: string;
   origin: string;
-  characters: string[];
-  inframe: string[];
-  hashtags: string[];
+  characters: string;
+  inframe: string;
+  hashtags: string;
+  costume: string;
+  makeup: string;
+  fg: string;
 }
 
 interface seriesInterface {
@@ -79,6 +83,8 @@ interface seriesInterface {
   hashtags: string[];
   category: string;
 }
+
+const mainHashtag = ["#cosplay", "#cosplayer"];
 
 const seriesList: seriesInterface[] = [
   {
@@ -213,6 +219,76 @@ const seriesList: seriesInterface[] = [
     hashtags: ["#honkaistarrail", "#honkaistarrailcosplay"],
     category: "games",
   },
+  {
+    name: "Wuthering Waves",
+    characters: [
+      "Aalto",
+      "Baizhi",
+      "Brant",
+      "Calcharo",
+      "Camellya",
+      "Cantarella",
+      "Carlotta",
+      "Changli",
+      "Chixia",
+      "Danjin",
+      "Encore",
+      "Jianxin",
+      "Jinhsi",
+      "Jiyan",
+      "Lingyang",
+      "Lumi",
+      "Mortefi",
+      "Phoebe",
+      "Roccia",
+      "Rover",
+      "Sanhua",
+      "Taoqi",
+      "The Shorekeeper",
+      "Verina",
+      "Xiangli Yao",
+      "Yangyang",
+      "Yinlin",
+      "Youhu",
+      "Yuanwu",
+      "Zani",
+      "Zhezhi",
+    ],
+    hashtags: [
+      "#wuwa",
+      "#wuwacosplay",
+      "#wutheringwaves",
+      "#wutheringwavescosplay",
+    ],
+    category: "games",
+  },
+  {
+    name: "Zenless Zone Zero",
+    characters: [
+      "Anby Demara",
+      "Anton Ivanov",
+      "Billy Kid",
+      "Corin Wickes",
+      "Cradily",
+      "Ellen Joe",
+      "Grace Howard",
+      "Hoshimi Miyabi",
+      "Koleda Belobog",
+      "Krieger",
+      "Lycopene",
+      "M13 Pom",
+      "Nicole Demara",
+      "Nekomiya Mana",
+      "Soukaku",
+    ],
+    hashtags: [
+      "#zzz",
+      "#zzzcosplay",
+      "#zenlesszonezero",
+      "#zenlesszonezerocosplay",
+    ],
+    category: "games",
+  },
 ];
 
 export default function PageHome() {
@@ -221,21 +297,51 @@ export default function PageHome() {
   const [postData, setPostData] = useState<postCaption>({
     upperquotes: "",
     origin: "",
-    characters: [],
-    inframe: [],
-    hashtags: [],
+    characters: "",
+    inframe: "",
+    hashtags: "",
+    costume: "",
+    makeup: "",
+    fg: "",
   });
 
   const [postDataInFrame, setPostDataInFrame] = useState("");
-  const [postDataFG, setPostDataFG] = useState("");
-  const [postDataMUA, setPostDataMUA] = useState("");
-  const [postDataCostume, setPostDataCostume] = useState("");
-  const [postDataCharacter, setPostDataCharacter] = useState("");
+  const [finalCaption, setFinalCaption] = useState("");
   const [postDataHashtag, setPostDataHashtag] = useState("");
   const [isExtra, setIsExtra] = useState(false);
   const [defaultSeries, setDefaultSeries] =
     useState<seriesInterface[]>(seriesList);
   const [isSubmit, setIsSubmit] = useState(false);
+  const [copySuccess, setCopySuccess] = useState<any>(null);
+
+  const [isGenerated, setIsGenerated] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(finalCaption);
+        setCopySuccess("Copied!");
+      } else {
+        // Fallback for older browsers
+        const textArea = document.createElement("textarea");
+        textArea.value = finalCaption;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textArea);
+        setCopySuccess("Copied!");
+        ToastSuccess("Caption copied to clipboard!");
+      }
+    } catch (error) {
+      setCopySuccess("Failed to copy!");
+      console.error("Failed to copy text: ", error);
+      ToastError("Failed to copy caption!");
+    }
+    setTimeout(() => {
+      setCopySuccess(null);
+    }, 2000); // Clear message after 2 seconds
+  };
 
   const getRandomQuote = () => {
     if (Array.isArray(quotesData) && quotesData.length > 0) {
@@ -295,6 +401,24 @@ export default function PageHome() {
     }
 
     return resultString;
+  };
+
+  const handleGenerateCaption = (data: postCaption) => {
+    setIsGenerated(true);
+
+    const textAreaValue =
+      `#${data.characters.replaceAll(" ", "")} — ` +
+      data.upperquotes +
+      "\n \n👤: " +
+      data.inframe +
+      `${data.fg != "" ? `\n📸: ${data.fg}` : ""}` +
+      "\n👗: " +
+      data.costume +
+      `${data.makeup != "" ? `\n💄: ${data.makeup}` : ""}` +
+      "\n \n " +
+      data.hashtags;
+
+    setFinalCaption(textAreaValue);
   };
 
   return (
@@ -432,13 +556,11 @@ export default function PageHome() {
                   setPostData((prevData) => ({
                     ...prevData,
                     origin: e.target.value,
-                  }));
-                  setPostDataHashtag(
-                    defaultSeries
+                    hashtags: defaultSeries
                       .filter((defSeries) => defSeries.name === e.target.value)
                       .flatMap((defSeries) => defSeries.hashtags)
-                      .join(", ")
-                  );
+                      .join(" "),
+                  }));
                 }}
                 className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
@@ -472,9 +594,26 @@ export default function PageHome() {
                   <select
                     id="origin"
                     name="origin"
-                    value={postDataCharacter}
+                    value={postData.characters}
                     onChange={(e) => {
-                      setPostDataCharacter(e.target.value);
+                      setPostData((prevData) => ({
+                        ...prevData,
+                        characters: e.target.value,
+                        hashtags:
+                          mainHashtag.join(" ") +
+                          ` ` +
+                          defaultSeries
+                            .filter(
+                              (defSeries) => defSeries.name === postData.origin
+                            )
+                            .flatMap((defSeries) => defSeries.hashtags)
+                            .join(" ") +
+                          ` #${e.target.value
+                            .replaceAll(" ", "")
+                            .toLowerCase()}cosplay #${e.target.value
+                            .replaceAll(" ", "")
+                            .toLowerCase()}`,
+                      }));
                     }}
                     className="col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   >
@@ -498,8 +637,21 @@ export default function PageHome() {
                   id="characters"
                   name="characters"
                   type="text"
-                  value={postDataCharacter}
-                  onChange={(e) => setPostDataCharacter(e.target.value)}
+                  value={postData.characters}
+                  onChange={(e) => {
+                    setPostData((prevData) => ({
+                      ...prevData,
+                      characters: e.target.value,
+                      hashtags:
+                        mainHashtag.join(" ") +
+                        ` ` +
+                        ` #${e.target.value
+                          .replaceAll(" ", "")
+                          .toLowerCase()}cosplay #${e.target.value
+                          .replaceAll(" ", "")
+                          .toLowerCase()}`,
+                    }));
+                  }}
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 />
               )}
@@ -518,9 +670,19 @@ export default function PageHome() {
                 id="inframe"
                 name="inframe"
                 type="text"
-                value={postDataInFrame}
-                onChange={(e) => setPostDataInFrame(e.target.value)}
-                onBlur={() => setPostDataInFrame(getInFrame(postDataInFrame))}
+                value={postData.inframe}
+                onChange={(e) =>
+                  setPostData((prevData) => ({
+                    ...prevData,
+                    inframe: e.target.value,
+                  }))
+                }
+                onBlur={() =>
+                  setPostData((prevData) => ({
+                    ...prevData,
+                    inframe: getInFrame(postData.inframe),
+                  }))
+                }
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
@@ -537,9 +699,19 @@ export default function PageHome() {
                 id="costume"
                 name="costume"
                 type="text"
-                value={postDataCostume}
-                onChange={(e) => setPostDataCostume(e.target.value)}
-                onBlur={() => setPostDataCostume(getInFrame(postDataCostume))}
+                value={postData.costume}
+                onChange={(e) =>
+                  setPostData((prevData) => ({
+                    ...prevData,
+                    costume: e.target.value,
+                  }))
+                }
+                onBlur={() =>
+                  setPostData((prevData) => ({
+                    ...prevData,
+                    costume: getInFrame(postData.costume),
+                  }))
+                }
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               />
             </div>
@@ -559,9 +731,19 @@ export default function PageHome() {
                     id="makeup"
                     name="makeup"
                     type="text"
-                    value={postDataMUA}
-                    onChange={(e) => setPostDataMUA(e.target.value)}
-                    onBlur={() => setPostDataMUA(getInFrame(postDataMUA))}
+                    value={postData.makeup}
+                    onChange={(e) =>
+                      setPostData((prevData) => ({
+                        ...prevData,
+                        makeup: e.target.value,
+                      }))
+                    }
+                    onBlur={() =>
+                      setPostData((prevData) => ({
+                        ...prevData,
+                        makeup: getInFrame(postData.makeup),
+                      }))
+                    }
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -578,9 +760,19 @@ export default function PageHome() {
                     id="fg"
                     name="fg"
                     type="text"
-                    value={postDataFG}
-                    onChange={(e) => setPostDataFG(e.target.value)}
-                    onBlur={() => setPostDataFG(getInFrame(postDataFG))}
+                    value={postData.fg}
+                    onChange={(e) =>
+                      setPostData((prevData) => ({
+                        ...prevData,
+                        fg: e.target.value,
+                      }))
+                    }
+                    onBlur={() =>
+                      setPostData((prevData) => ({
+                        ...prevData,
+                        fg: getInFrame(postData.fg),
+                      }))
+                    }
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                   />
                 </div>
@@ -608,17 +800,58 @@ export default function PageHome() {
                 name="hashtags"
                 rows={3}
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                value={postDataHashtag}
-                onChange={(e) => setPostDataHashtag(e.target.value)}
+                value={postData.hashtags}
+                onChange={(e) =>
+                  setPostData((prevData) => ({
+                    ...prevData,
+                    hashtags: e.target.value,
+                  }))
+                }
               />
             </div>
           </div>
         </div>
         <div className="flex items-center mt-12">
-          <button className="mx-auto text-center py-2 px-4 rounded-lg bg-green-500 hover:bg-green-700 text-white cursor-pointer">
+          <button
+            className="mx-auto text-center py-2 px-4 rounded-lg bg-green-500 hover:bg-green-700 text-white cursor-pointer"
+            onClick={() => handleGenerateCaption(postData)}
+          >
             Generate Caption!
           </button>
         </div>
+
+        {isGenerated && (
+          <>
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 lg:max-w-3xl mx-auto">
+              <div className="col-span-full">
+                <label
+                  htmlFor="generated"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Generated Caption
+                </label>
+                <div className="mt-2">
+                  <textarea
+                    id="generated"
+                    name="generated"
+                    rows={10}
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    value={finalCaption}
+                    onChange={(e) => setFinalCaption(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center mt-12">
+              <button
+                className="mx-auto text-center py-2 px-4 rounded-lg bg-green-500 hover:bg-green-700 text-white cursor-pointer"
+                onClick={() => handleCopy()}
+              >
+                Copy to Clipboard
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
