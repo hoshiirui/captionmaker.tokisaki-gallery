@@ -44,6 +44,8 @@ const page = () => {
   };
 
   const showAdvancedNotification = () => {
+    console.log("jalan");
+    console.log(Notification.permission);
     if (Notification.permission === "granted") {
       new Notification("Advanced Notification", {
         body: "Check out these cool features!",
@@ -51,8 +53,8 @@ const page = () => {
         badge: "/vercel.svg", // Optional badge icon
         // vibrate: [200, 100, 200, 100, 400],
         // sound: "sdfs", // You can specify a sound file URL here
-        data: { url: "/dashboard" }, // Custom data
-        tag: "advanced-notification", // Tag to prevent duplicates
+        data: { url: "dashboard" }, // Custom data
+        // tag: "Welcome", // Tag to prevent duplicates
         // actions: [
         //   { action: "view", title: "View Dashboard" },
         //   { action: "dismiss", title: "Dismiss" },
@@ -97,7 +99,10 @@ const page = () => {
       >
         Show Basic Notification
       </button>
-      <button onClick={showAdvancedNotification}>
+      <button
+        onClick={showAdvancedNotification}
+        className="mx-auto text-center py-2 px-4 rounded-lg bg-green-500 hover:bg-green-700 text-white cursor-pointer"
+      >
         Show Advanced Notification
       </button>
       <button type="button">test</button>
