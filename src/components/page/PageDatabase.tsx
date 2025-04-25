@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Header from "../templates/Header";
 
 interface cosPlan {
+  id: string;
   coser: string;
   character: string;
   description: string;
@@ -12,8 +13,57 @@ interface cosPlan {
   chname: string;
 }
 
+const cosPlanDefaultData: cosPlan[] = [
+  {
+    id: "sjaflfs1",
+    coser: "@meyaaow",
+    character: "Stelle",
+    description: "",
+    place: "Jalanan Sekitar Taman Kota / Patung Singa Ambara Raja",
+    date: "",
+    chname: "",
+  },
+  {
+    id: "sjaflfs2",
+    coser: "@meyaaow",
+    character: "Jane Doe",
+    description: "",
+    place: "Grafitti di Jalan Rumah Wira",
+    date: "",
+    chname: "Zone of Anonimity",
+  },
+  {
+    id: "sjaflfs3",
+    coser: "@meyaaow",
+    character: "Evelyn Chevalier",
+    description: "",
+    place: "",
+    date: "",
+    chname: "At Evening, Inside an Eve",
+  },
+  {
+    id: "slkfjsdl",
+    coser: "@yunawrvii._",
+    character: "Kiana HoF",
+    description: "",
+    place: "",
+    date: "",
+    chname: "The Day You Look at Me",
+  },
+  {
+    id: "lsljflsdfds",
+    coser: "@chisupasta",
+    character: "The Herta",
+    description: "",
+    place: "",
+    date: "",
+    chname: "",
+  },
+];
+
 const PageDatabase = () => {
   const [formDataCos, setFormDataCos] = useState<cosPlan>({
+    id: "",
     coser: "",
     character: "",
     description: "",
@@ -22,9 +72,11 @@ const PageDatabase = () => {
     chname: "",
   });
   const [isAddNew, setIsAddNew] = useState(false);
+  const [cosplanData, setCosplanData] = useState<cosPlan[]>(cosPlanDefaultData);
 
   const dataToDefault = () => {
     setFormDataCos({
+      id: "",
       coser: "",
       character: "",
       description: "",
@@ -241,50 +293,30 @@ const PageDatabase = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="hover:bg-slate-50">
-                    <td className="p-4">
-                      <p className="text-sm font-bold">Kiana HoF</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">@yunawrvii._</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">-</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">-</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">The Day You Look at Me</p>
-                    </td>
-                    <td className="p-4">
-                      <a href="#" className="text-sm font-semibold ">
-                        Edit
-                      </a>
-                    </td>
-                  </tr>
-                  <tr className="hover:bg-slate-50">
-                    <td className="p-4">
-                      <p className="text-sm font-bold">The Herta</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">@chisupasta</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">-</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">-</p>
-                    </td>
-                    <td className="p-4">
-                      <p className="text-sm">Unknown</p>
-                    </td>
-                    <td className="p-4">
-                      <a href="#" className="text-sm font-semibold ">
-                        Edit
-                      </a>
-                    </td>
-                  </tr>
+                  {cosplanData.map((cosplan) => (
+                    <tr className="hover:bg-slate-50" key={cosplan.id}>
+                      <td className="p-4">
+                        <p className="text-sm font-bold">{cosplan.character}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm">{cosplan.coser}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm">{cosplan.date}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm">{cosplan.place}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="text-sm">{cosplan.chname}</p>
+                      </td>
+                      <td className="p-4">
+                        <a href="#" className="text-sm font-semibold ">
+                          Edit
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
