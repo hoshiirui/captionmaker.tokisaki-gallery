@@ -1,6 +1,7 @@
 import PageDatabase from "@/components/page/PageDatabase";
 import PageHome from "@/components/page/PageHome";
 import PageNotification from "@/components/page/PageNotification";
+import PageNotifv2 from "@/components/page/PageNotifv2";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -10,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <PageNotification />;
+  return <PageNotifv2 />;
 }
